@@ -25,7 +25,7 @@ set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/vimfiles,/usr/share/vi
 set shiftwidth=2
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
 set tags=./tags;
-set window=29
+set window=23
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -41,11 +41,11 @@ badd +1 CMakeLists.txt
 badd +26 arduino_due_toolchain.cmake
 badd +85 examples/basic_test/basic_test.ino
 badd +50 examples/servo_test/servo_test.ino
-badd +14 README.md
+badd +106 README.md
 badd +22 pwm_lib_license_header.txt
-badd +0 library.properties
+badd +9 library.properties
 args pwm_defs.h pwm_lib.h pwm_defs.cpp CMakeLists.txt arduino_due_toolchain.cmake
-edit library.properties
+edit examples/basic_test/basic_test.ino
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -58,7 +58,7 @@ set winheight=1 winwidth=1
 exe 'vert 1resize ' . ((&columns * 75 + 75) / 151)
 exe 'vert 2resize ' . ((&columns * 75 + 75) / 151)
 argglobal
-edit library.properties
+edit examples/basic_test/basic_test.ino
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -89,8 +89,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'jproperties'
-setlocal filetype=jproperties
+if &filetype != ''
+setlocal filetype=
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -149,8 +149,8 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'jproperties'
-setlocal syntax=jproperties
+if &syntax != ''
+setlocal syntax=
 endif
 setlocal tabstop=8
 setlocal tags=
@@ -162,24 +162,24 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 9 - ((8 * winheight(0) + 17) / 35)
+let s:l = 130 - ((17 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-9
-normal! 017|
+130
+normal! 0
 wincmd w
 argglobal
-edit README.md
+edit examples/servo_test/servo_test.ino
 setlocal keymap=
 setlocal noarabic
-setlocal noautoindent
+setlocal autoindent
 setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
 setlocal buftype=
-setlocal nocindent
+setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
@@ -201,8 +201,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'markdown'
-setlocal filetype=markdown
+if &filetype != ''
+setlocal filetype=
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -236,7 +236,7 @@ setlocal nomodeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 set number
-setlocal nonumber
+setlocal number
 setlocal numberwidth=4
 setlocal omnifunc=
 setlocal path=
@@ -248,7 +248,7 @@ setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
-setlocal shiftwidth=8
+setlocal shiftwidth=2
 setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=0
@@ -261,8 +261,8 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'markdown'
-setlocal syntax=markdown
+if &syntax != ''
+setlocal syntax=
 endif
 setlocal tabstop=8
 setlocal tags=
@@ -274,13 +274,14 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 106 - ((23 * winheight(0) + 17) / 35)
+let s:l = 105 - ((15 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-106
+105
 normal! 0
 wincmd w
+2wincmd w
 exe 'vert 1resize ' . ((&columns * 75 + 75) / 151)
 exe 'vert 2resize ' . ((&columns * 75 + 75) / 151)
 tabnext 1

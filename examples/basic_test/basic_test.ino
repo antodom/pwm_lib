@@ -102,10 +102,10 @@ void loop() {
 
   delay(DUTY_KEEPING_TIME);
 
-  uint32_t duty,period;
+  uint32_t status,duty,period;
 
   Serial.println("===============================================================");
-  capture_pin2.get_duty_and_period(duty,period);
+  status=capture_pin2.get_duty_and_period(duty,period);
   Serial.print("[PIN 35 -> PIN 2] duty: "); 
   Serial.print(
     static_cast<double>(duty)/
@@ -116,7 +116,7 @@ void loop() {
   Serial.print(period/capture_pin2.ticks_per_usec());
   Serial.println(" usecs.");
 
-  capture_pinA7.get_duty_and_period(duty,period);
+  status=capture_pinA7.get_duty_and_period(duty,period);
   Serial.print("[PIN 42 -> PIN A7] duty: "); 
   Serial.print(
     static_cast<double>(duty)/

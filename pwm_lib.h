@@ -95,6 +95,8 @@ namespace arduino_due
 
        uint32_t get_period() { return _period_; }
 
+       uint32_t get_clock() { return _clock_; }
+
      private:
 
        uint32_t _clock_;

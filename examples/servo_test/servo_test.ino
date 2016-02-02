@@ -85,8 +85,8 @@ void loop() {
 
   delay(DUTY_CHANGE_TIME);
 
-  uint32_t duty,period;
-  capture_pin2.get_duty_and_period(duty,period);
+  uint32_t status,duty,period;
+  status=capture_pin2.get_duty_and_period(duty,period);
 
   Serial.println("********************************************************");  
   Serial.print("[PIN DAC1 -> PIN 2] duty: "); 

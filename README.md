@@ -10,13 +10,13 @@ The pwm_lib library is an open source project which is openly available under th
 
 ### 1. Introduction
 
-This is a C++ library to abstract the use of the eighth hardware PWM channels available on Arduino DUE's Atmel ATSAM3X8E microcontroller. Each channel can be used to generate a completely independent PWM signal directly on hardware. The motivation to develop this library was two fold. First, the current limitation of the Arduino standard library where it is not possible to change the PWM output period of the PWM signals generated using function *analogWrite()*. And second, to have a library for servos directly supported by the hardware, therefore, "lighter", in terms of code generated and computational load, than the Servo library available in the Arduino standard library.
+This is a C++ library to abstract the use of the eight hardware PWM channels available on Arduino DUE's Atmel ATSAM3X8E microcontroller. Each channel can be used to generate a completely independent PWM signal directly on hardware. The motivation to develop this library was two fold. First, the current limitation of the Arduino standard library where it is not possible to change the PWM output period of the PWM signals generated using function *analogWrite()*. And second, to have a library for servos directly supported by the hardware, therefore, "lighter", in terms of code generated and computational load, than the Servo library available in the Arduino standard library.
 
 The library provides two kind of objects associated with each PWM channel: pwm and servo objects. As those objects abstract the PWM channels available on the micro controller, using pwm_lib you can use, at most, eight independent pwm_lib objects in your application, each one with its own PWM characteristics (PWM signal period and pulse duration). In its current version, the maximum period for PWM signals you can get using pwm_lib is a period of 0.798915048 seconds (minimum frequency of 1.251697539 Hz).
 
 ### 2. PWM objects
 
-PWM objects abstract the use of  ATSAM3X8E PWM channels for generation PWM signals on hardware. There eight independent hardware PWM channels in Atmel 's ATSAM3X8E and using pwm_lib you can use one PWM object associated which each channel. Mind that, according to ATSAM3X8E's data sheet, for correct operation at the same time it is only possible to use one object associated with the same hardware PWM channel.
+PWM objects abstract the use of  ATSAM3X8E's PWM channels for generating PWM signals on hardware. There are eight independent hardware PWM channels in Atmel 's ATSAM3X8E, and using pwm_lib you can use one PWM object associated which each channel. Mind that, according to ATSAM3X8E's data sheet, for correct operation, at the same time it is possible to use only one object associated with a given hardware PWM channel.
 
 To use pwm_lib's pwm objects you have to declare it using a C++ template, here a snippet of code extracted from *basic_test.ino*:
 
@@ -26,7 +26,7 @@ To use pwm_lib's pwm objects you have to declare it using a C++ template, here a
 pwm<pwm_pin::PWMH0_PC3> pwm_pin35;
 ```
 
-The template argument provided indicates which PWM channel and which pin is used to generate the PWM output. Take into account that each channel can only be associated with a set of pins, according to the data sheet of the micro controller. The set of pins available for each channel is "hardwired", and is listed in ATSAM3X8E data sheet's Table 38-2 (the data sheet is available in Atmel's web site at [http://www.atmel.com/devices/SAM3X8E.aspx](http://www.atmel.com/devices/SAM3X8E.aspx)). In fact, in pwm_lib, the correspondence between PWM channels and pins is mapped into a set of identifiers which you must use as arguments to declare pwm objects. This set of identifiers is the enum *pwm_pin*  defined in pwm_defs.h file. The whole enum is reproduced next:
+The template argument provided indicates which PWM channel and which pin is used to generate the PWM output. Take into account that each channel can only be associated with a set of pins, according to the data sheet of the micro controller. The set of pins available for each channel is "hardwired", and is listed in ATSAM3X8E data sheet's Table 38-2 (the data sheet is available in Atmel's web site at [http://www.atmel.com/devices/SAM3X8E.aspx](http://www.atmel.com/devices/SAM3X8E.aspx)). In fact, in pwm_lib, the correspondence between PWM channels and pins is mapped into a set of identifiers which you must use as arguments to declare pwm objects. This set of identifiers is the enumeration *pwm_pin*  defined in pwm_defs.h file. The whole enumeration is reproduced next:
 
 ```
     enum class pwm_pin: uint32_t
@@ -76,7 +76,7 @@ The template argument provided indicates which PWM channel and which pin is used
     };
 ```
 
-You have to put special emphasis on what PWM channel you are using (specified by the first part of the identifier) and which pin out of the set of pins available you will utilize for the channel. In order to know which Arduino DUE's pin corresponds to the one you have selected, you must consult the mapping of ATSM38XE's on the DUE consulting [https://www.arduino.cc/en/Hacking/PinMappingSAM3X](https://www.arduino.cc/en/Hacking/PinMappingSAM3X). In the example provided previously, the PWM channel used is channel 0, ATSAM3X8E is pin PC3, and its corresponding pin on the DUE is pin 35 (the code is reproduced here for clarification):
+You have to put special emphasis on what PWM channel you are using (specified by the first part of the identifier) and which pin out of the set of pins available you will utilize for the channel. In order to know which Arduino DUE's pin corresponds to the one you have selected, you must consult the mapping of ATSM38XE's on the DUE consulting [https://www.arduino.cc/en/Hacking/PinMappingSAM3X](https://www.arduino.cc/en/Hacking/PinMappingSAM3X). In the example provided previously, the PWM channel used is channel 0, ATSAM3X8E's pin is pin PC3, and its corresponding pin on the DUE is pin 35 (the code is reproduced here for clarification):
 
 ```
 // defining pwm object using pin 35, pin PC3 mapped to pin 35 on the DUE
