@@ -63,15 +63,15 @@ namespace arduino_due
 
        void stop()
        {
-	 while(
-	   (PWM->PWM_SR & (1<<pin_info::pwm_channel)) 
-	   != 0
-	 ) { /* nothing */ } 
-
          PWMC_DisableChannel(
 	   PWM_INTERFACE,
 	   pin_info::channel
 	 ); 
+
+	 while(
+	   (PWM->PWM_SR & (1<<pin_info::channel)) 
+	   != 0
+	 ) { /* nothing */ } 
        }
 
        uint32_t get_duty() { return _duty_; }

@@ -37,10 +37,11 @@
 using namespace arduino_due::pwm_lib;
 
 #define PWM_PERIOD 2000000 // tenth of usecs (1e-8 secs)
-#define DUTY_ANGLE 90 
+#define DUTY_BASE_ANGLE 90
+#define DUTY_INCREMENT 25 
 
 #define CAPTURE_TIME_WINDOW 40000 // usecs
-#define DUTY_CHANGE_TIME 1000 // msecs
+#define DUTY_CHANGE_TIME 5000 // msecs
 
 servo<pwm_pin::PWML0_PB16> servo_pwm_pinDAC1; // PB16 is DUE's pin DAC1
 
@@ -105,12 +106,29 @@ void loop() {
 
   if(millis()-last_duty>DUTY_CHANGE_TIME)
   {
-    duty_angle+=(DUTY_ANGLE>>1);
-    if(duty_angle>180) duty_angle=0;
+    duty_angle+=DUTY_INCREMENT;
+    if(duty_angle>180) 
+    {
+      duty_angle=DUTY_BASE_ANGLE;
+      
+      servo_pwm_pinDAC1.stop();
 
-    servo_pwm_pinDAC1.set_angle(duty_angle);
+      delay(DUTY_CHANGE_TIME);
+
+      servo_pwm_pinDAC1.start(
+        PWM_PERIOD, // pwm servo period
+        100000, // 1e-8 secs. (1 msecs.), minimum duty value
+        200000, // 1e-8 secs. (2 msecs.), maximum duty value
+        0, // minimum angle, corresponding minimum servo angle
+        180, // maximum angle, corresponding minimum servo angle
+        duty_angle // initial servo angle 
+      );
+    }
+    else 
+    {
+      servo_pwm_pinDAC1.set_angle(duty_angle);
+      last_duty=millis();
+    }
   }
-
-
 }
 
