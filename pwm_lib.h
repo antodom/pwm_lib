@@ -151,6 +151,8 @@ namespace arduino_due
        )
      );
     
+     PWMC_EnableChannel(PWM_INTERFACE,pin_info::channel);
+
      _duty_=duty;
      PWMC_SetDutyCycle(
        PWM_INTERFACE,
@@ -160,8 +162,6 @@ namespace arduino_due
 	 pwm_core::tick_times[_clock_]
        )
      );
-
-     PWMC_EnableChannel(PWM_INTERFACE,pin_info::channel);
 
      return true;
    }
