@@ -37,11 +37,11 @@
 
 using namespace arduino_due::pwm_lib;
 
-#define PWM_PERIOD_PIN_35 100000 // tenth of usecs (1e-8 secs)
-#define PWM_DUTY_PIN_35 1000 // 10 usecs in tenth of usecs (1e-8 secs)
+#define PWM_PERIOD_PIN_35 100000 // hundredth of usecs (1e-8 secs)
+#define PWM_DUTY_PIN_35 1000 // 10 usecs in hundredth of usecs (1e-8 secs)
 
-#define PWM_PERIOD_PIN_42 2000000 // 20 msecs in tenth of usecs (1e-8 secs)
-#define PWM_DUTY_PIN_42 100000 // 1000 msecs in tenth of usecs (1e-8 secs)
+#define PWM_PERIOD_PIN_42 2000000 // 20 msecs in hundredth of usecs (1e-8 secs)
+#define PWM_DUTY_PIN_42 100000 // 1000 msecs in hundredth of usecs (1e-8 secs)
 
 #define CAPTURE_TIME_WINDOW 40000 // usecs
 #define DUTY_KEEPING_TIME 1000 // msecs

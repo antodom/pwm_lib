@@ -57,8 +57,8 @@ namespace arduino_due
        pwm& operator=(pwm&& the_pwm) = delete;
 
        bool start(
-	 uint32_t period, // tenths of usecs (1e-8 secs)
-	 uint32_t duty // // tenths of usecs (1e-8 secs)
+	 uint32_t period, // hundredths of usecs (1e-8 secs)
+	 uint32_t duty // // hundredths of usecs (1e-8 secs)
        );
 
        void stop()
@@ -100,15 +100,15 @@ namespace arduino_due
      private:
 
        uint32_t _clock_;
-       uint32_t _period_; // tenths of usecs (1e-8 secs.)
-       uint32_t _duty_; // tenths of usecs (1e-8 secs.)
+       uint32_t _period_; // hundredths of usecs (1e-8 secs.)
+       uint32_t _duty_; // hundredths of usecs (1e-8 secs.)
    
    };
 
    template<pwm_pin PIN>
    bool pwm<PIN>::start(
-     uint32_t period, // tenths of usecs (1e-8 secs.)
-     uint32_t duty // tenths of usecs (1e-8 secs.)
+     uint32_t period, // hundredths of usecs (1e-8 secs.)
+     uint32_t duty // hundredths of usecs (1e-8 secs.)
    )
    {
      if(
@@ -182,9 +182,9 @@ namespace arduino_due
        servo& operator=(servo&& the_servo) = delete;
 
        bool start(
-	 uint32_t period, // tenths of usecs (1e-8 secs)
-	 uint32_t time_min, // tenths of usecs (1e-8 secs)
-	 uint32_t time_max, // tenths of usecs (1e-8 secs)
+	 uint32_t period, // hundredths of usecs (1e-8 secs)
+	 uint32_t time_min, // hundredths of usecs (1e-8 secs)
+	 uint32_t time_max, // hundredths of usecs (1e-8 secs)
 	 uint32_t angle_min, // degrees
 	 uint32_t angle_max, // degress
 	 uint32_t duty // degress
@@ -223,8 +223,8 @@ namespace arduino_due
 
        pwm_t _pwm_obj_;
 
-       uint32_t _t_min_; // tenth of usecs (1e-8 secs)
-       uint32_t _t_max_; // tenth of usecs (1e-8 secs)
+       uint32_t _t_min_; // hundredth of usecs (1e-8 secs)
+       uint32_t _t_max_; // hundredth of usecs (1e-8 secs)
 
        uint32_t _a_min_; // degrees
        uint32_t _a_max_; // degrees
@@ -234,9 +234,9 @@ namespace arduino_due
 
    template<pwm_pin PIN>
    bool servo<PIN>::start(
-     uint32_t period, // tenths of usecs (1e-8 secs)
-     uint32_t time_min, // tenths of usecs (1e-8 secs)
-     uint32_t time_max, // tenths of usecs (1e-8 secs)
+     uint32_t period, // hundredths of usecs (1e-8 secs)
+     uint32_t time_min, // hundredths of usecs (1e-8 secs)
+     uint32_t time_max, // hundredths of usecs (1e-8 secs)
      uint32_t angle_min, // degrees
      uint32_t angle_max, // degress
      uint32_t duty_angle // degress

@@ -84,13 +84,13 @@ You have to put special emphasis on what PWM channel you are using (specified by
 pwm<pwm_pin::PWMH0_PC3> pwm_pin35;
 ```
 
-Once the pwm object has been defined you start using it providing its PWM period and its initial duty value (pulse duration). You specify both period and duty in tenths of microseconds (10e-8 seconds). Here a snippet from *basic_test.ino*:
+Once the pwm object has been defined you start using it providing its PWM period and its initial duty value (pulse duration). You specify both period and duty in hundredths of microseconds (1e-8 seconds). Here a snippet from *basic_test.ino*:
 
 ```
 pwm_pin35.start(PWM_PERIOD_PIN_35,PWM_DUTY_PIN_35);
 ```
 
-Then, you can change the duty at any moment (the duty is specified equally in tenths of microseconds):
+Then, you can change the duty at any moment (the duty is specified equally in hundredths of microseconds):
 
 ```
 pwm_pin35.set_duty(duty_value);
@@ -111,7 +111,7 @@ Servo object in pwm_lib are also defined using a template. Here we include a sni
 servo<pwm_pin::PWML0_PB16> servo_pwm_pinDAC1; // PB16 is DUE's pin DAC1
 ```
 
-As you can observe from the previous code fragment, equally to PWM objects, the argument of the template is the same identifier we use for PWM objects. In the example the PWM channel used is channel 0, and the pin is PB16, which in turns, corresponds to pin DAC1 on the DUE. In fact, a servo object is a PWM object with a different mapping for duty values, instead of specifying them using time units (tenths of microseconds), in servo objects the duty is specified in angle degrees.
+As you can observe from the previous code fragment, equally to PWM objects, the argument of the template is the same identifier we use for PWM objects. In the example the PWM channel used is channel 0, and the pin is PB16, which in turns, corresponds to pin DAC1 on the DUE. In fact, a servo object is a PWM object with a different mapping for duty values, instead of specifying them using time units (hundredths of microseconds), in servo objects the duty is specified in angle degrees.
 
 So, once a servo object is declared we start using it, providing its PWM period, the interval of pulse duration and its correspondence to an interval of angles, and its initial duty specified as an angle degree. The next portion of code extracted from *servo_test.ino* illustrates it:
 

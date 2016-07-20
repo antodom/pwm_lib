@@ -182,7 +182,7 @@ namespace arduino_due
       { return max_period(max_two_power); }
 
       extern bool find_clock(
-        uint32_t period, // tenths of usecs (1e-8 secs)
+        uint32_t period, // hundredths of usecs (1e-8 secs)
         uint32_t& clock
       ) noexcept;
 

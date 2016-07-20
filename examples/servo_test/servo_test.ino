@@ -36,7 +36,7 @@
 
 using namespace arduino_due::pwm_lib;
 
-#define PWM_PERIOD 2000000 // tenth of usecs (1e-8 secs)
+#define PWM_PERIOD 2000000 // hundredth of usecs (1e-8 secs)
 #define DUTY_BASE_ANGLE 90
 #define DUTY_INCREMENT 25 
 
