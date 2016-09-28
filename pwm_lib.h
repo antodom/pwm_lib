@@ -49,7 +49,7 @@ namespace arduino_due
 
        using pin_info = pin_traits<PIN>;
 
-       pwm() = default;
+       pwm(): _started_(false) {} 
 
        pwm(const pwm& the_pwm) = delete;
        pwm(pwm&& the_pwm) = delete;
@@ -63,6 +63,8 @@ namespace arduino_due
 
        void stop()
        {
+	 if(!_started_) return;
+
          PWMC_DisableChannel(
 	   PWM_INTERFACE,
 	   pin_info::channel
@@ -72,13 +74,15 @@ namespace arduino_due
 	   (PWM->PWM_SR & (1<<pin_info::channel)) 
 	   != 0
 	 ) { /* nothing */ } 
+
+	 _started_=false;
        }
 
        uint32_t get_duty() { return _duty_; }
 
        bool set_duty(uint32_t duty /* 1e-8 secs. */)
        {
-	 if(duty>_period_) return false;
+	 if(!_started_ || (duty>_period_)) return false;
 
 	 _duty_=duty;
 	 PWMC_SetDutyCycle(
@@ -93,6 +97,34 @@ namespace arduino_due
 	 return true;
        }
 
+       bool set_period(uint32_t period /* 1e-8 secs. */)
+       {
+	 uint32_t clock;
+	 
+	 if(
+	   !_started_
+	   || !pwm_core::find_clock(period,clock) 
+	   || (_duty_>period)
+	 ) return false;
+
+	 if(clock==_clock_)
+	 {
+	   _period_=period;
+	   PWMC_SetPeriod(
+	     PWM_INTERFACE,
+	     pin_info::channel,
+	     static_cast<uint32_t>(
+	       (static_cast<double>(period)/100000000)/
+	       pwm_core::tick_times[_clock_]
+	     )
+	   );
+	 }
+	 else
+	 { stop(); start(period,_duty_); }
+
+	 return true;
+       }
+
        uint32_t get_period() { return _period_; }
 
        uint32_t get_clock() { return _clock_; }
@@ -102,6 +134,7 @@ namespace arduino_due
        uint32_t _clock_;
        uint32_t _period_; // hundredths of usecs (1e-8 secs.)
        uint32_t _duty_; // hundredths of usecs (1e-8 secs.)
+       bool _started_;
    
    };
 
@@ -112,8 +145,9 @@ namespace arduino_due
    )
    {
      if(
-       !pwm_core::find_clock(period,_clock_) ||
-       (duty>period)
+       _started_ 
+       || !pwm_core::find_clock(period,_clock_) 
+       || (duty>period)
      ) return false;
 
      pmc_enable_periph_clk(PWM_INTERFACE_ID);
@@ -162,6 +196,8 @@ namespace arduino_due
 	 pwm_core::tick_times[_clock_]
        )
      );
+
+     _started_=true;
 
      return true;
    }
