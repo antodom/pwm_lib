@@ -95,6 +95,11 @@ Then, you can change the duty at any moment (the duty is specified equally in hu
 ```
 pwm_pin35.set_duty(duty_value);
 ```
+Or the period (specified also in hundredths of microseconds):
+
+```
+pwm_pin35.set_period(period);
+```
 
 And you can stop PWM generation:
 
@@ -154,15 +159,15 @@ In addition you must add the flag -std=gnu++11 for compiling. For doing that add
 
 ### 5. Examples
 
-On directory *examples* you have available two examples, namely: *basic_test.ino* and *servo_test.ino*, who illustrate respectively the use of pwm and servo objects.
+On directory *examples* you have available three examples, namely: *basic_test.ino*, *changing_period_test.ino* and *servo_test.ino*, who illustrate respectively the use of pwm and servo objects.
 
-Example *basic_test.ino* uses two PWM objects for generating two independent PWM outputs with different PWM characteristics (period and duty). Example *servo_test.ino* uses a servo object to generated a PWM output for a typical servo.
+Example *basic_test.ino* uses two PWM objects for generating two independent PWM outputs with different PWM characteristics (period and duty). Example *changing_period_test.ino* utilizes a PWM object to generate a PWM signal with different periods. And example *servo_test.ino* uses a servo object to generated a PWM output for a typical servo.
 
-In both examples we use tc_lib's capture objects as "oscilloscopes" probes for checking the PWM outputs generated. This library is available at [https://github.com/antodom/tc_lib](https://github.com/antodom/tc_lib), and it is necessary for compiling both examples.
+For all examples we use tc_lib's capture objects as "oscilloscopes" probes for checking the PWM outputs generated. This library is available at [https://github.com/antodom/tc_lib](https://github.com/antodom/tc_lib), and it is necessary for compiling both examples.
 
 ### 6. Incompatibilities
 
-This library is potentially incompatible with the analogWrite(), if you use analogWrite() on the output pin associated with a pwm_lib object.
+This library is potentially incompatible with analogWrite(), if you use analogWrite() on the output pin associated with a pwm_lib object.
 
 ### 7. Compiling with CMake
 
@@ -183,6 +188,7 @@ For compiling in command line using CMake, just proceed in the following manner:
 7. Compile executing `make`.
 8. The previous step has generated the examples available with the library. You can upload the code executing:
   * `make upload_basic_test`, 
+  * `make upload_changing_period_test`, 
   * `make upload_servo_test`, 
 
 ### 8. Library users
