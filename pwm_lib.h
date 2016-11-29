@@ -120,7 +120,10 @@ namespace arduino_due
 	   );
 	 }
 	 else
-	 { stop(); start(period,_duty_); }
+	 { 
+	   stop(); 
+	   return start(period,_duty_); 
+	 }
 
 	 return true;
        }
