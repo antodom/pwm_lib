@@ -59,24 +59,21 @@ namespace arduino_due
        bool start(
 	 uint32_t period, // hundredths of usecs (1e-8 secs)
 	 uint32_t duty // // hundredths of usecs (1e-8 secs)
-       );
-
-       void stop()
+       )
        {
-	 if(!_started_) return;
+         uint32_t clock;
+	 if(
+	   _started_ 
+	   || !pwm_core::find_clock(period,clock) 
+	   || (duty>period)
+	 ) return false;
 
-         PWMC_DisableChannel(
-	   PWM_INTERFACE,
-	   pin_info::channel
-	 ); 
+	 _start_(period,duty,clock);
 
-	 while(
-	   (PWM->PWM_SR & (1<<pin_info::channel)) 
-	   != 0
-	 ) { /* nothing */ } 
-
-	 _started_=false;
+	 return true;
        }
+
+       void stop() { if(_started_) _stop_(); }
 
        uint32_t get_duty() { return _duty_; }
 
@@ -85,7 +82,8 @@ namespace arduino_due
 	 if(!_started_ || (duty>_period_)) return false;
 
 	 _duty_=duty;
-	 PWMC_SetDutyCycle(
+	 //PWMC_SetDutyCycle(
+	 pwm_core::pwmc_setdutycycle(
 	   PWM_INTERFACE,
 	   pin_info::channel,
 	   static_cast<uint32_t>(
@@ -97,14 +95,17 @@ namespace arduino_due
 	 return true;
        }
 
-       bool set_period(uint32_t period /* 1e-8 secs. */)
+       bool set_period_and_duty(
+         uint32_t period, /* 1e-8 secs. */
+	 uint32_t duty /* 1e-8 secs. */
+       )
        {
 	 uint32_t clock;
 	 
 	 if(
 	   !_started_
 	   || !pwm_core::find_clock(period,clock) 
-	   || (_duty_>period)
+	   || (duty>period)
 	 ) return false;
 
 	 if(clock==_clock_)
@@ -118,12 +119,11 @@ namespace arduino_due
 	       pwm_core::tick_times[_clock_]
 	     )
 	   );
+
+	   set_duty(duty); 
 	 }
 	 else
-	 { 
-	   stop(); 
-	   return start(period,_duty_); 
-	 }
+	 { _stop_(); _start_(period,duty,clock); }
 
 	 return true;
        }
@@ -138,20 +138,37 @@ namespace arduino_due
        uint32_t _period_; // hundredths of usecs (1e-8 secs.)
        uint32_t _duty_; // hundredths of usecs (1e-8 secs.)
        bool _started_;
-   
+
+       void _start_(
+	 uint32_t period, // hundredths of usecs (1e-8 secs.)
+	 uint32_t duty, // hundredths of usecs (1e-8 secs.)
+	 uint32_t clock
+       );
+       
+       void _stop_()
+       {
+         PWMC_DisableChannel(
+	   PWM_INTERFACE,
+	   pin_info::channel
+	 ); 
+
+	 while(
+	   (PWM->PWM_SR & (1<<pin_info::channel)) 
+	   != 0
+	 ) { /* nothing */ } 
+
+	 _started_=false;
+       }
    };
 
    template<pwm_pin PIN>
-   bool pwm<PIN>::start(
+   void pwm<PIN>::_start_(
      uint32_t period, // hundredths of usecs (1e-8 secs.)
-     uint32_t duty // hundredths of usecs (1e-8 secs.)
+     uint32_t duty, // hundredths of usecs (1e-8 secs.)
+     uint32_t clock
    )
    {
-     if(
-       _started_ 
-       || !pwm_core::find_clock(period,_clock_) 
-       || (duty>period)
-     ) return false;
+     _clock_=clock;
 
      pmc_enable_periph_clk(PWM_INTERFACE_ID);
 
@@ -191,7 +208,8 @@ namespace arduino_due
      PWMC_EnableChannel(PWM_INTERFACE,pin_info::channel);
 
      _duty_=duty;
-     PWMC_SetDutyCycle(
+     //PWMC_SetDutyCycle(
+     pwm_core::pwmc_setdutycycle(
        PWM_INTERFACE,
        pin_info::channel,
        static_cast<uint32_t>(
@@ -201,8 +219,6 @@ namespace arduino_due
      );
 
      _started_=true;
-
-     return true;
    }
    
    template<pwm_pin PIN>

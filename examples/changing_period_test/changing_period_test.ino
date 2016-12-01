@@ -37,11 +37,48 @@
 
 using namespace arduino_due::pwm_lib;
 
-#define PWM_PERIOD_PIN_35 100000 // hundredth of usecs (1e-8 secs)
-#define PWM_DUTY_PIN_35 1000 // 10 usecs in hundredth of usecs (1e-8 secs)
+#define PERIODS 16 
+uint32_t periods[PERIODS]= // hundredths of usecs (1e-8 secs.)
+{
+  10,      // 0.1 usecs. 
+  100,     // 1 usec.
+  1000,    // 10 usecs. 
+  10000,   // 100 usecs. 
+  100000,  // 1000 usecs.
+  1000000, // 10000 usecs.
+  10000000,// 100000 usecs.
+  50000000,// 500000 usecs.
+  50000000,// 500000 usecs.
+  10000000,// 100000 usecs.
+  1000000, // 10000 usecs.
+  100000,  // 1000 usecs.
+  10000,   // 100 usecs. 
+  1000,    // 10 usecs. 
+  100,     // 1 usec.
+  10,      // 0.1 usecs. 
+};
+//{
+//  100,  // 1 usecs. 
+//  200,  // 2 usec.
+//  400,  // 4 usecs. 
+//  800,  // 8 usecs. 
+//  1600, // 16 usecs.
+//  3200, // 32 usecs.
+//  6400, // 64 usecs.
+//  12800,// 128 usecs.
+//  25600,// 256 usecs.
+//  12800,// 128 usecs.
+//  6400, // 64 usecs.
+//  3200, // 32 usecs.
+//  1600, // 16 usecs. 
+//  800,  // 8 usecs. 
+//  400,  // 4 usec.
+//  200,  // 2 usecs. 
+//};
+uint32_t period=0;
 
-#define CAPTURE_TIME_WINDOW 40000 // usecs
-#define DUTY_KEEPING_TIME 1000 // msecs
+#define CAPTURE_TIME_WINDOW 1000000 // usecs
+#define DUTY_KEEPING_TIME 1500 // msecs
 
 // defining pwm object using pin 35, pin PC3 mapped to pin 35 on the DUE
 // this object uses PWM channel 0
@@ -67,60 +104,56 @@ void setup() {
 
   Serial.begin(9600);
 
+  // starting PWM signals
+  pwm_pin35.start(periods[period],(periods[period]>>1));
+  Serial.println("===============================================================");
+  Serial.print("period "); Serial.print(period); Serial.print(": ");
+  Serial.print(static_cast<double>(periods[period])/100); Serial.print(" usecs. (duty=");
+  Serial.print(static_cast<double>(periods[period]>>1)/100); Serial.println(")");
+  Serial.println("===============================================================");
+  period=(period+1); //&0x0F;
+
   // initialization of capture objects
   capture_pin2.config(CAPTURE_TIME_WINDOW);
-
-  // starting PWM signals
-  pwm_pin35.start(PWM_PERIOD_PIN_35,PWM_DUTY_PIN_35);
 }
 
 void loop() {
   // put your main code here,to run repeatedly:
+  uint32_t status,captured_duty,captured_period;
 
-  if(!pwm_pin35.set_period(PWM_PERIOD_PIN_35+(PWM_DUTY_PIN_35<<1)))
-  {
-    Serial.print("[ERROR] set_period(");
-    Serial.print(PWM_PERIOD_PIN_35+(PWM_DUTY_PIN_35<<1));
-    Serial.println(") failed!");
-  }
+  capture_pin2.restart();
 
   delay(DUTY_KEEPING_TIME);
 
-  uint32_t status,duty,period;
-
-  Serial.println("===============================================================");
-  status=capture_pin2.get_duty_and_period(duty,period);
-  Serial.print("[PIN 35 -> PIN 2] duty: "); 
+  status=capture_pin2.get_duty_and_period(captured_duty,captured_period);
+  Serial.print("[PIN 35 -> PIN 2] captured duty: "); 
   Serial.print(
-    static_cast<double>(duty)/
+    static_cast<double>(captured_duty)/
     static_cast<double>(capture_pin2.ticks_per_usec()),
     3
   );
-  Serial.print(" usecs. period: ");
-  Serial.print(period/capture_pin2.ticks_per_usec());
+  Serial.print(" usecs. captured period: ");
+  Serial.print(
+    static_cast<double>(captured_period)/
+    static_cast<double>(capture_pin2.ticks_per_usec()),
+    3
+  );
   Serial.println(" usecs.");
   Serial.println("===============================================================");
 
-  if(!pwm_pin35.set_period(PWM_PERIOD_PIN_35+(PWM_DUTY_PIN_35<<3)))
+  if(!pwm_pin35.set_period_and_duty(periods[period],(periods[period]>>1)))
   {
-    Serial.print("[ERROR] set_period(");
-    Serial.print(PWM_PERIOD_PIN_35+(PWM_DUTY_PIN_35<<3));
+    Serial.print("[ERROR] set_period_and_duty(");
+    Serial.print(periods[period]);
+    Serial.print(",");
+    Serial.print((periods[period]>>1));
     Serial.println(") failed!");
   }
-
-  delay(DUTY_KEEPING_TIME);
-
   Serial.println("===============================================================");
-  status=capture_pin2.get_duty_and_period(duty,period);
-  Serial.print("[PIN 35 -> PIN 2] duty: "); 
-  Serial.print(
-    static_cast<double>(duty)/
-    static_cast<double>(capture_pin2.ticks_per_usec()),
-    3
-  );
-  Serial.print(" usecs. period: ");
-  Serial.print(period/capture_pin2.ticks_per_usec());
-  Serial.println(" usecs.");
+  Serial.print("period "); Serial.print(period); Serial.print(": ");
+  Serial.print(static_cast<double>(periods[period])/100); Serial.print(" usecs. (duty=");
+  Serial.print(static_cast<double>(periods[period]>>1)/100); Serial.println(")");
   Serial.println("===============================================================");
+  period=(period+1)&0x0F;
 }
 

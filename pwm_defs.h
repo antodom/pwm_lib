@@ -190,6 +190,10 @@ namespace arduino_due
       inline bool is_inside(const T& v_min, const T& v_max, const T& v)
       { return ((v_min<=v) && (v<=v_max)); }
 
+
+      // WARNING: this is a sustituton of PWMC_SetDutyCycle() function
+      // in libsam, to avoid the assert.
+      void pwmc_setdutycycle(Pwm* pPwm,uint32_t ul_channel,uint16_t duty);
     }
 
   }

@@ -95,11 +95,20 @@ Then, you can change the duty at any moment (the duty is specified equally in hu
 ```
 pwm_pin35.set_duty(duty_value);
 ```
-Or the period (specified also in hundredths of microseconds):
+And the period and the duty (specified both also in hundredths of microseconds):
 
 ```
-pwm_pin35.set_period(period);
+if(pwm_pin35.set_period_and_duty(period,duty))
+{
+  // period and duty were changed 
+}
+else
+{
+  // either the period is too large, or duty>period
+}
+
 ```
+Mind that for changing the period you must change the duty, and the duty you provide must be less than the period.
 
 And you can stop PWM generation:
 

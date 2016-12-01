@@ -103,6 +103,27 @@ namespace arduino_due
         return true;
       }
 
+      // WARNING: this is a sustituton of PWMC_SetDutyCycle() function
+      // in libsam, to avoid the assert.
+      void pwmc_setdutycycle(Pwm* pPwm,uint32_t ul_channel,uint16_t duty)
+      {
+        // WARNING: assert has been commented, the caller should
+	// guarantee that duty<=period when calling this function,
+	// in order to generate a good PWM signal
+	//assert(duty <= pPwm->PWM_CH_NUM[ul_channel].PWM_CPRD);
+
+        /* If ul_channel is disabled, write to CDTY */
+        if ((pPwm->PWM_SR & (1 << ul_channel)) == 0) {
+
+            pPwm->PWM_CH_NUM[ul_channel].PWM_CDTY = duty;
+        }
+        /* Otherwise use update register */
+        else {
+
+            pPwm->PWM_CH_NUM[ul_channel].PWM_CDTYUPD = duty;
+        }
+      }
+
     }
 
   }
