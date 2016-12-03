@@ -170,7 +170,7 @@ In addition you must add the flag -std=gnu++11 for compiling. For doing that add
 
 On directory *examples* you have available three examples, namely: *basic_test.ino*, *changing_period_test.ino* and *servo_test.ino*, who illustrate respectively the use of pwm and servo objects.
 
-Example *basic_test.ino* uses two PWM objects for generating two independent PWM outputs with different PWM characteristics (period and duty). Example *changing_period_test.ino* utilizes a PWM object to generate a PWM signal with different periods. And example *servo_test.ino* uses a servo object to generated a PWM output for a typical servo.
+Example *basic_test.ino* uses two PWM objects for generating two independent PWM outputs with different PWM characteristics (period and duty). Example *wrapper_basic_test.ino* is equal to *basic_test.ino*, but illustrates the use of wrapper objects for using pwm objects as pointers. This is useful, for example, to make an array of pointer to pwm objects. Example *changing_period_test.ino* utilizes a PWM object to generate a PWM signal with different periods. And example *servo_test.ino* uses a servo object to generated a PWM output for a typical servo. Finally, *wrapper_servo_test.ino* has the same functionality that *servo_test.ino* but using wrapper servo objects.
 
 For all examples we use tc_lib's capture objects as "oscilloscopes" probes for checking the PWM outputs generated. This library is available at [https://github.com/antodom/tc_lib](https://github.com/antodom/tc_lib), and it is necessary for compiling both examples.
 
@@ -197,8 +197,10 @@ For compiling in command line using CMake, just proceed in the following manner:
 7. Compile executing `make`.
 8. The previous step has generated the examples available with the library. You can upload the code executing:
   * `make upload_basic_test`, 
+  * `make upload_wrapper_basic_test`, 
   * `make upload_changing_period_test`, 
   * `make upload_servo_test`, 
+  * `make upload_wrapper_servo_test` 
 
 ### 8. Library users
 

@@ -54,8 +54,10 @@ build_library(
 set(
   TC_EXAMPLES
   basic_test
+  wrapper_basic_test
   changing_period_test
   servo_test
+  wrapper_servo_test
 )
 
 foreach(src_example ${TC_EXAMPLES})

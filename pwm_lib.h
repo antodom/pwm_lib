@@ -220,6 +220,61 @@ namespace arduino_due
 
      _started_=true;
    }
+
+   class pwm_base
+   {
+     public:
+       virtual ~pwm_base() {}
+
+       virtual bool start(uint32_t period, uint32_t duty) = 0;
+       virtual void stop() = 0;
+       virtual uint32_t get_duty() = 0;
+       virtual bool set_duty(uint32_t duty) = 0;
+       virtual bool set_period_and_duty(uint32_t period, uint32_t duty) = 0; 
+       virtual uint32_t get_period() = 0; 
+
+       virtual uint32_t get_clock() = 0; 
+   };
+
+   template<typename PWM_TYPE>
+   class pwm_wrapper: public pwm_base
+   {
+     public:
+
+       pwm_wrapper(PWM_TYPE& pwm_obj): _pwm_obj_(pwm_obj) {}
+       
+       pwm_wrapper(const pwm_wrapper& the_pwm) = delete;
+       pwm_wrapper(pwm_wrapper&& the_pwm) = delete;
+       pwm_wrapper& operator=(const pwm_wrapper& the_pwm) = delete;
+       pwm_wrapper& operator=(pwm_wrapper&& the_pwm) = delete;
+       
+       ~pwm_wrapper() override {}
+
+       bool start(uint32_t period, uint32_t duty) override
+       { return _pwm_obj_.start(period,duty); }
+
+       void stop() override
+       { _pwm_obj_.stop(); }
+
+       uint32_t get_duty() override
+       { return _pwm_obj_.get_duty(); }
+
+       bool set_duty(uint32_t duty) override 
+       { return _pwm_obj_.set_duty(duty); }
+
+       bool set_period_and_duty(uint32_t period, uint32_t duty) override
+       { return _pwm_obj_.set_period_and_duty(period,duty); }
+
+       uint32_t get_period() override
+       { return _pwm_obj_.get_period(); }
+
+       uint32_t get_clock() override
+       { return _pwm_obj_.get_clock(); }
+
+     private:
+       
+       PWM_TYPE& _pwm_obj_; 
+   };
    
    template<pwm_pin PIN>
    class servo
@@ -321,6 +376,85 @@ namespace arduino_due
 
      return false;
    }
+
+   class servo_base
+   {
+     public:
+
+       virtual ~servo_base() {}
+
+       virtual bool start(
+	 uint32_t period, // hundredths of usecs (1e-8 secs)
+	 uint32_t time_min, // hundredths of usecs (1e-8 secs)
+	 uint32_t time_max, // hundredths of usecs (1e-8 secs)
+	 uint32_t angle_min, // degrees
+	 uint32_t angle_max, // degress
+	 uint32_t duty // degress
+       ) = 0;
+       virtual void stop() = 0;
+       virtual uint32_t get_angle() = 0;
+       virtual bool set_angle(uint32_t angle /* degrees */) = 0;
+       virtual uint32_t get_period() = 0;
+       virtual uint32_t get_t_min() = 0;
+       virtual uint32_t get_t_max() = 0;
+       virtual uint32_t get_a_min() = 0;
+       virtual uint32_t get_a_max() = 0;
+   };
+
+   template<typename SERVO_TYPE>
+   class servo_wrapper: public servo_base
+   {
+     public:
+        
+       servo_wrapper(SERVO_TYPE& servo_obj): _servo_obj_(servo_obj) {}
+       ~servo_wrapper() override {}
+
+       bool start(
+	 uint32_t period, // hundredths of usecs (1e-8 secs)
+	 uint32_t time_min, // hundredths of usecs (1e-8 secs)
+	 uint32_t time_max, // hundredths of usecs (1e-8 secs)
+	 uint32_t angle_min, // degrees
+	 uint32_t angle_max, // degress
+	 uint32_t duty // degress
+       ) override 
+       { 
+         return _servo_obj_.start(
+	   period,
+	   time_min,
+	   time_max,
+	   angle_min,
+	   angle_max,
+	   duty
+	 ); 
+       }
+
+       void stop() override { _servo_obj_.stop(); }
+
+       uint32_t get_angle() override 
+       { return _servo_obj_.get_angle(); }
+       
+       bool set_angle(uint32_t angle) override 
+       { return _servo_obj_.set_angle(angle); }
+       
+       uint32_t get_period() override 
+       { return _servo_obj_.get_period(); }
+       
+       uint32_t get_t_min() override 
+       { return _servo_obj_.get_t_min(); }
+
+       uint32_t get_t_max() override 
+       { return _servo_obj_.get_t_max(); }
+
+       uint32_t get_a_min() override 
+       { return _servo_obj_.get_a_min(); }
+
+       uint32_t get_a_max() override 
+       { return _servo_obj_.get_a_max(); }
+
+     private:
+
+       SERVO_TYPE& _servo_obj_;
+   };
 
  }
 

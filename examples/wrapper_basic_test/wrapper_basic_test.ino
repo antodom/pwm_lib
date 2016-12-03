@@ -36,25 +36,12 @@
 
 using namespace arduino_due::pwm_lib;
 
-#define ANGLES 8
-uint32_t angles[ANGLES]= // degrees
-{
-  0,
-  45, 
-  90,
-  135,
-  180,
-  135,
-  90,
-  45
-};
-uint32_t angle=0;
-uint32_t last_angle;
-
 #define PWM_PERIOD 2000000 // hundredth of usecs (1e-8 secs)
+#define DUTY_BASE_ANGLE 90
+#define DUTY_INCREMENT 25 
 
 #define CAPTURE_TIME_WINDOW 40000 // usecs
-#define ANGLE_CHANGE_TIME 5000 // msecs
+#define DUTY_CHANGE_TIME 5000 // msecs
 
 servo<pwm_pin::PWML0_PB16> servo_pwm_pinDAC1; // PB16 is DUE's pin DAC1
 
@@ -71,6 +58,9 @@ servo<pwm_pin::PWML0_PB16> servo_pwm_pinDAC1; // PB16 is DUE's pin DAC1
 capture_tc0_declaration();
 auto& capture_pin2=capture_tc0;
 
+uint32_t duty_angle=0;
+unsigned long last_duty;
+
 void setup() {
   // put your setup code here, to run once:
 
@@ -85,20 +75,16 @@ void setup() {
     200000, // 1e-8 secs. (2 msecs.), maximum duty value
     0, // minimum angle, corresponding minimum servo angle
     180, // maximum angle, corresponding minimum servo angle
-    angles[angle] // initial servo angle 
+    duty_angle // initial servo angle 
   );
-  last_angle=millis();
-  Serial.println("********************************************************");
-  Serial.print("angle "); Serial.print(angle); 
-  Serial.print(": "); Serial.print(angles[angle]); 
-  Serial.println(" dgs.");
+  last_duty=millis();
   Serial.println("********************************************************");
 }
 
 void loop() {
   // put your main code here,to run repeatedly:
 
-  delay(ANGLE_CHANGE_TIME);
+  delay(DUTY_CHANGE_TIME);
 
   uint32_t status,duty,period;
   status=capture_pin2.get_duty_and_period(duty,period);
@@ -118,16 +104,31 @@ void loop() {
   );
   Serial.println(" usecs.");
 
-  if(millis()-last_angle>ANGLE_CHANGE_TIME)
+  if(millis()-last_duty>DUTY_CHANGE_TIME)
   {
-    angle=(angle+1)&0x07;
-    servo_pwm_pinDAC1.set_angle(angles[angle]);
-    last_angle=millis();
-    Serial.println("********************************************************");
-    Serial.print("angle "); Serial.print(angle); 
-    Serial.print(": "); Serial.print(angles[angle]); 
-    Serial.println(" dgs.");
-    Serial.println("********************************************************");
+    duty_angle+=DUTY_INCREMENT;
+    if(duty_angle>180) 
+    {
+      duty_angle=DUTY_BASE_ANGLE;
+      
+      servo_pwm_pinDAC1.stop();
+
+      delay(DUTY_CHANGE_TIME);
+
+      servo_pwm_pinDAC1.start(
+        PWM_PERIOD, // pwm servo period
+        100000, // 1e-8 secs. (1 msecs.), minimum duty value
+        200000, // 1e-8 secs. (2 msecs.), maximum duty value
+        0, // minimum angle, corresponding minimum servo angle
+        180, // maximum angle, corresponding minimum servo angle
+        duty_angle // initial servo angle 
+      );
+    }
+    else 
+    {
+      servo_pwm_pinDAC1.set_angle(duty_angle);
+      last_duty=millis();
+    }
   }
 }
 
