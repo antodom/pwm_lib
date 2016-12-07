@@ -59,7 +59,7 @@ uint32_t last_angle;
 
 servo<pwm_pin::PWML0_PB16> servo_pwm_pinDAC1; // PB16 is DUE's pin DAC1
 servo_wrapper<
-  servo<pwm_pin::PWML0_PB16>
+  decltype(servo_pwm_pinDAC1)
 > servo_wrapper_pwm_pinDAC1(servo_pwm_pinDAC1);
 servo_base* servo_wrapper_pwm_pinDAC1_ptr=&servo_wrapper_pwm_pinDAC1;
 
