@@ -20,6 +20,21 @@ else()
 
 endif()
 
+# checking environment variable ARDUINO_DUE_VERSION
+if( 
+  NOT (DEFINED ENV{ARDUINO_DUE_VERSION})
+  OR 
+  ($ENV{ARDUINO_DUE_VERSION} EQUAL "")
+)
+
+  message(FATAL_ERROR "[ERROR] Environment variable ARDUINO_DUE_VERSION not set!")
+
+else()
+
+  message(STATUS "Environment variable ARDUINO_DUE_ROOT_PATH: $ENV{ARDUINO_DUE_VERSION}")
+
+endif()
+
 function(find_due_program DUE_PROGRAM_PATH DUE_PROGRAM WHERE)
 
   find_program(
@@ -71,11 +86,11 @@ CMAKE_FORCE_C_COMPILER(${DUE_CC} arduino_due_arm)
 CMAKE_FORCE_CXX_COMPILER(${DUE_CXX} arduino_due_arm)
 
 include_directories(
-  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/system/libsam
-  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/system/CMSIS/CMSIS/Include
-  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/system/CMSIS/Device/ATMEL $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/cores/arduino 
-  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/cores/arduino/USB
-  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/variants/arduino_due_x
+  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/system/libsam
+  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/system/CMSIS/CMSIS/Include
+  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/system/CMSIS/Device/ATMEL $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/cores/arduino 
+  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/cores/arduino/USB
+  $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/variants/arduino_due_x
 )
 
 

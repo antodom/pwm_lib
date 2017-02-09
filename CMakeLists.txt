@@ -14,15 +14,15 @@ project(pwm_lib C CXX)
 build_library(
   arduino_due_std_lib 
   SRC_PATHS 
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/cores/arduino
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/cores/arduino/USB
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/variants/arduino_due_x
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/libraries/SPI
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/cores/arduino
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/cores/arduino/USB
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/variants/arduino_due_x
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/libraries/SPI
   INCLUDE_PATHS 
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/cores/arduino
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/cores/arduino/USB
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/variants/arduino_due_x
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/libraries/SPI
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/cores/arduino
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/cores/arduino/USB
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/variants/arduino_due_x
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/libraries/SPI
 )
 
 # checking environment variable ARDUINO_IDE_LIBRARY_PATH
@@ -69,7 +69,7 @@ foreach(src_example ${TC_EXAMPLES})
   add_executable(
     ${src_example}.cpp.elf 
     ${src_example}.cpp
-    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/cores/arduino/syscalls_sam3.c
+    $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/cores/arduino/syscalls_sam3.c
   )
   target_compile_options(
     ${src_example}.cpp.elf PUBLIC 
@@ -88,7 +88,7 @@ foreach(src_example ${TC_EXAMPLES})
   )
   target_link_libraries(
     ${src_example}.cpp.elf
-    -Os -Wl,--gc-sections -mcpu=cortex-m3 -T$ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/variants/arduino_due_x/linker_scripts/gcc/flash.ld -Wl,-Map,${src_example}.cpp.map -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group arduino_due_std_lib pwm_lib $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/1.6.9/variants/arduino_due_x/libsam_sam3x8e_gcc_rel.a -Wl,--end-group -lm 
+    -Os -Wl,--gc-sections -mcpu=cortex-m3 -T$ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/variants/arduino_due_x/linker_scripts/gcc/flash.ld -Wl,-Map,${src_example}.cpp.map -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group arduino_due_std_lib pwm_lib $ENV{ARDUINO_DUE_ROOT_PATH}/hardware/sam/$ENV{ARDUINO_DUE_VERSION}/variants/arduino_due_x/libsam_sam3x8e_gcc_rel.a -Wl,--end-group -lm 
   )
   
   # bin
