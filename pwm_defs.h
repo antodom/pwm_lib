@@ -91,7 +91,7 @@ namespace arduino_due
     template<pwm_pin PIN> struct pin_traits {};
 
     #define pin_traits_specialization(the_pwm_pin,pio,pio_pin,pio_id,pio_type,pio_conf,pwm_channel,pwm_inverted) \
-    template<> struct pin_traits< \ 
+    template<> struct pin_traits< \
       the_pwm_pin \
     > \
     { \
