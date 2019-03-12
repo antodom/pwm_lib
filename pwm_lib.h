@@ -57,20 +57,20 @@ namespace arduino_due
        pwm& operator=(pwm&& the_pwm) = delete;
 
        bool start(
-	 uint32_t period, // hundredths of usecs (1e-8 secs)
-	 uint32_t duty // // hundredths of usecs (1e-8 secs)
+        uint32_t period, // hundredths of usecs (1e-8 secs)
+        uint32_t duty // // hundredths of usecs (1e-8 secs)
        )
        {
          uint32_t clock;
-	 if(
-	   _started_ 
-	   || !pwm_core::find_clock(period,clock) 
-	   || (duty>period)
-	 ) return false;
+	       if(
+	         _started_ 
+	         || !pwm_core::find_clock(period,clock) 
+	         || (duty>period)
+	       ) return false;
 
-	 _start_(period,duty,clock);
+	       _start_(period,duty,clock);
 
-	 return true;
+	       return true;
        }
 
        void stop() { if(_started_) _stop_(); }
@@ -79,53 +79,71 @@ namespace arduino_due
 
        bool set_duty(uint32_t duty /* 1e-8 secs. */)
        {
-	 if(!_started_ || (duty>_period_)) return false;
+	       if(!_started_ || (duty>_period_)) return false;
 
-	 _duty_=duty;
-	 //PWMC_SetDutyCycle(
-	 pwm_core::pwmc_setdutycycle(
-	   PWM_INTERFACE,
-	   pin_info::channel,
-	   static_cast<uint32_t>(
-	     (static_cast<double>(duty)/100000000)/
-	     pwm_core::tick_times[_clock_]
-	   )
-	 );
-       
-	 return true;
+	       _duty_=duty;
+	       //PWMC_SetDutyCycle(
+	       pwm_core::pwmc_setdutycycle(
+	         PWM_INTERFACE,
+	         pin_info::channel,
+	         static_cast<uint32_t>(
+	           (static_cast<double>(duty)/100000000)/
+	           pwm_core::tick_times[_clock_]
+	         )
+	       );
+             
+	       return true;
        }
 
        bool set_period_and_duty(
          uint32_t period, /* 1e-8 secs. */
-	 uint32_t duty /* 1e-8 secs. */
+         uint32_t duty, /* 1e-8 secs. */
+         bool keep_clock = true
        )
        {
-	 uint32_t clock;
-	 
-	 if(
-	   !_started_
-	   || !pwm_core::find_clock(period,clock) 
-	   || (duty>period)
-	 ) return false;
+	       if(!_started_ || (duty>period)) return false;
 
-	 if(clock==_clock_)
-	 {
-	   _period_=period;
-	   PWMC_SetPeriod(
-	     PWM_INTERFACE,
-	     pin_info::channel,
-	     static_cast<uint32_t>(
-	       (static_cast<double>(period)/100000000)/
-	       pwm_core::tick_times[_clock_]
-	     )
-	   );
+         if(keep_clock)
+         {
+           auto new_period=static_cast<double>(period)/100000000;
 
-	   set_duty(duty); 
-	 }
-	 else
-	 { _stop_(); _start_(period,duty,clock); }
+           if(new_period>pwm_core::max_periods[_clock_]) return false;
 
-	 return true;
+	         _period_=period;
+	         PWMC_SetPeriod(
+	           PWM_INTERFACE,
+	           pin_info::channel,
+	           static_cast<uint32_t>(
+	             new_period/pwm_core::tick_times[_clock_]
+	           )
+	         );
+
+	         set_duty(duty); 
+         }
+         else
+         {
+	         uint32_t clock;
+	         if(!pwm_core::find_clock(period,clock)) return false;
+
+	         if(clock==_clock_)
+	         {
+	           _period_=period;
+	           PWMC_SetPeriod(
+	             PWM_INTERFACE,
+	             pin_info::channel,
+	             static_cast<uint32_t>(
+	               (static_cast<double>(period)/100000000)/
+	               pwm_core::tick_times[_clock_]
+	             )
+	           );
+
+	           set_duty(duty); 
+	         }
+	         else
+	         { _stop_(); _start_(period,duty,clock); }
+         }
+
+	       return true;
        }
 
        uint32_t get_period() { return _period_; }
@@ -140,24 +158,24 @@ namespace arduino_due
        bool _started_;
 
        void _start_(
-	 uint32_t period, // hundredths of usecs (1e-8 secs.)
-	 uint32_t duty, // hundredths of usecs (1e-8 secs.)
-	 uint32_t clock
+	       uint32_t period, // hundredths of usecs (1e-8 secs.)
+	       uint32_t duty, // hundredths of usecs (1e-8 secs.)
+	       uint32_t clock
        );
        
        void _stop_()
        {
          PWMC_DisableChannel(
-	   PWM_INTERFACE,
-	   pin_info::channel
-	 ); 
+	         PWM_INTERFACE,
+	         pin_info::channel
+	       ); 
 
-	 while(
-	   (PWM->PWM_SR & (1<<pin_info::channel)) 
-	   != 0
-	 ) { /* nothing */ } 
+	       while(
+	         (PWM->PWM_SR & (1<<pin_info::channel)) 
+	         != 0
+	       ) { /* nothing */ } 
 
-	 _started_=false;
+	       _started_=false;
        }
    };
 
@@ -200,8 +218,8 @@ namespace arduino_due
        PWM_INTERFACE,
        pin_info::channel,
        static_cast<uint32_t>(
-	 (static_cast<double>(period)/100000000)/
-	 pwm_core::tick_times[_clock_]
+	       (static_cast<double>(period)/100000000)/
+	       pwm_core::tick_times[_clock_]
        )
      );
     
@@ -213,8 +231,8 @@ namespace arduino_due
        PWM_INTERFACE,
        pin_info::channel,
        static_cast<uint32_t>(
-	 (static_cast<double>(duty)/100000000)/
-	 pwm_core::tick_times[_clock_]
+	       (static_cast<double>(duty)/100000000)/
+	       pwm_core::tick_times[_clock_]
        )
      );
 
@@ -230,7 +248,11 @@ namespace arduino_due
        virtual void stop() = 0;
        virtual uint32_t get_duty() = 0;
        virtual bool set_duty(uint32_t duty) = 0;
-       virtual bool set_period_and_duty(uint32_t period, uint32_t duty) = 0; 
+       virtual bool set_period_and_duty(
+         uint32_t period, 
+         uint32_t duty,
+         bool keep_clock = true
+       ) = 0; 
        virtual uint32_t get_period() = 0; 
 
        virtual uint32_t get_clock() = 0; 
@@ -262,8 +284,12 @@ namespace arduino_due
        bool set_duty(uint32_t duty) override 
        { return _pwm_obj_.set_duty(duty); }
 
-       bool set_period_and_duty(uint32_t period, uint32_t duty) override
-       { return _pwm_obj_.set_period_and_duty(period,duty); }
+       bool set_period_and_duty(
+         uint32_t period, 
+         uint32_t duty,
+         bool keep_clock = true
+       ) override
+       { return _pwm_obj_.set_period_and_duty(period,duty,keep_clock); }
 
        uint32_t get_period() override
        { return _pwm_obj_.get_period(); }
@@ -292,12 +318,12 @@ namespace arduino_due
        servo& operator=(servo&& the_servo) = delete;
 
        bool start(
-	 uint32_t period, // hundredths of usecs (1e-8 secs)
-	 uint32_t time_min, // hundredths of usecs (1e-8 secs)
-	 uint32_t time_max, // hundredths of usecs (1e-8 secs)
-	 uint32_t angle_min, // degrees
-	 uint32_t angle_max, // degress
-	 uint32_t duty // degress
+	       uint32_t period, // hundredths of usecs (1e-8 secs)
+	       uint32_t time_min, // hundredths of usecs (1e-8 secs)
+	       uint32_t time_max, // hundredths of usecs (1e-8 secs)
+	       uint32_t angle_min, // degrees
+	       uint32_t angle_max, // degress
+	       uint32_t duty // degress
        );
 
        void stop() { _pwm_obj_.stop(); }
@@ -306,11 +332,11 @@ namespace arduino_due
 
        bool set_angle(uint32_t angle /* degrees */)
        {
-	 if(
-	   !pwm_core::is_inside(_a_min_,_a_max_,angle)
-	 ) return false;
+	       if(
+	         !pwm_core::is_inside(_a_min_,_a_max_,angle)
+	       ) return false;
 
-	 _angle_=angle;
+	       _angle_=angle;
 
          uint32_t duty=
            (
@@ -318,9 +344,9 @@ namespace arduino_due
              static_cast<double>(_a_max_-_a_min_)
            )*(_t_max_-_t_min_) + _t_min_;
 
-	 if(_pwm_obj_.set_duty(duty)) { _angle_=angle; return true; }
-       
-	 return false;
+	       if(_pwm_obj_.set_duty(duty)) { _angle_=angle; return true; }
+             
+	       return false;
        }
 
        uint32_t get_period() { return _pwm_obj_.get_period(); }
@@ -384,12 +410,12 @@ namespace arduino_due
        virtual ~servo_base() {}
 
        virtual bool start(
-	 uint32_t period, // hundredths of usecs (1e-8 secs)
-	 uint32_t time_min, // hundredths of usecs (1e-8 secs)
-	 uint32_t time_max, // hundredths of usecs (1e-8 secs)
-	 uint32_t angle_min, // degrees
-	 uint32_t angle_max, // degress
-	 uint32_t duty // degress
+         uint32_t period, // hundredths of usecs (1e-8 secs)
+         uint32_t time_min, // hundredths of usecs (1e-8 secs)
+         uint32_t time_max, // hundredths of usecs (1e-8 secs)
+         uint32_t angle_min, // degrees
+         uint32_t angle_max, // degress
+         uint32_t duty // degress
        ) = 0;
        virtual void stop() = 0;
        virtual uint32_t get_angle() = 0;
@@ -410,22 +436,22 @@ namespace arduino_due
        ~servo_wrapper() override {}
 
        bool start(
-	 uint32_t period, // hundredths of usecs (1e-8 secs)
-	 uint32_t time_min, // hundredths of usecs (1e-8 secs)
-	 uint32_t time_max, // hundredths of usecs (1e-8 secs)
-	 uint32_t angle_min, // degrees
-	 uint32_t angle_max, // degress
-	 uint32_t duty // degress
+	       uint32_t period, // hundredths of usecs (1e-8 secs)
+	       uint32_t time_min, // hundredths of usecs (1e-8 secs)
+	       uint32_t time_max, // hundredths of usecs (1e-8 secs)
+	       uint32_t angle_min, // degrees
+	       uint32_t angle_max, // degress
+	       uint32_t duty // degress
        ) override 
        { 
          return _servo_obj_.start(
-	   period,
-	   time_min,
-	   time_max,
-	   angle_min,
-	   angle_max,
-	   duty
-	 ); 
+	         period,
+	         time_min,
+	         time_max,
+	         angle_min,
+	         angle_max,
+	         duty
+	       ); 
        }
 
        void stop() override { _servo_obj_.stop(); }
