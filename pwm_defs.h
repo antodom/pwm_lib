@@ -155,7 +155,7 @@ namespace arduino_due
     namespace pwm_core
     {
   
-      constexpr const uint32_t max_two_power=10;
+      constexpr const uint32_t max_two_power=12;
       extern const double max_periods[max_two_power+1];
       extern const double tick_times[max_two_power+1];
       extern const uint32_t clock_masks[max_two_power+1];

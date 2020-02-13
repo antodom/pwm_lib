@@ -54,7 +54,9 @@ namespace arduino_due
         max_period(7), // clock divisor 128 
         max_period(8), // clock divisor 256 
         max_period(9), // clock divisor 512 
-        max_period(10) // clock divisor 1024 
+        max_period(10), // clock divisor 1024 
+        max_period(11), // clock divisor 2048 
+        max_period(12) // clock divisor 4096 
       };
  
       const uint32_t clock_masks[max_two_power+1]=
@@ -69,7 +71,9 @@ namespace arduino_due
         PWM_CMR_CPRE_MCK_DIV_128,
         PWM_CMR_CPRE_MCK_DIV_256,
         PWM_CMR_CPRE_MCK_DIV_512,
-        PWM_CMR_CPRE_MCK_DIV_1024
+        PWM_CMR_CPRE_MCK_DIV_1024,
+        PWM_CMR_CPRE_CLKA,
+        PWM_CMR_CPRE_CLKB
       };
 
       const double tick_times[max_two_power+1]=
@@ -84,7 +88,9 @@ namespace arduino_due
         tick_time(7), // clock divisor 128 
         tick_time(8), // clock divisor 256 
         tick_time(9), // clock divisor 512 
-        tick_time(10) // clock divisor 1024 
+        tick_time(10), // clock divisor 1024 
+        tick_time(11), // clock divisor 1024 
+        tick_time(12) // clock divisor 1024 
       };
  
       bool find_clock(
@@ -108,9 +114,9 @@ namespace arduino_due
       void pwmc_setdutycycle(Pwm* pPwm,uint32_t ul_channel,uint16_t duty)
       {
         // WARNING: assert has been commented, the caller should
-	// guarantee that duty<=period when calling this function,
-	// in order to generate a good PWM signal
-	//assert(duty <= pPwm->PWM_CH_NUM[ul_channel].PWM_CPRD);
+        // guarantee that duty<=period when calling this function,
+        // in order to generate a good PWM signal
+        //assert(duty <= pPwm->PWM_CH_NUM[ul_channel].PWM_CPRD);
 
         /* If ul_channel is disabled, write to CDTY */
         if ((pPwm->PWM_SR & (1 << ul_channel)) == 0) {

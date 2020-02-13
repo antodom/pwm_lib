@@ -190,8 +190,11 @@ namespace arduino_due
 
      pmc_enable_periph_clk(PWM_INTERFACE_ID);
 
-     // we are not using clkA and clkB
-     //PWMC_ConfigureClocks(0,0,VARIANT_MCK);
+     PWMC_ConfigureClocks(
+      VARIANT_MCK>>11, // prescaler 2048 in clock A
+      VARIANT_MCK>>12, // prescaler 4096 in clock B 
+      VARIANT_MCK
+    );
 
      // configuring the pwm pin
      PIO_Configure(
