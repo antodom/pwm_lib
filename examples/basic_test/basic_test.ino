@@ -37,14 +37,14 @@
 
 using namespace arduino_due::pwm_lib;
 
-#define PWM_PERIOD_PIN_35 100000 // hundredth of usecs (1e-8 secs)
-#define PWM_DUTY_PIN_35 1000 // 10 usecs in hundredth of usecs (1e-8 secs)
+#define PWM_PERIOD_PIN_35 300000000 // hundredth of usecs (1e-8 secs)
+#define PWM_DUTY_PIN_35 50000000 // 100 msecs in hundredth of usecs (1e-8 secs)
 
 #define PWM_PERIOD_PIN_42 2000000 // 20 msecs in hundredth of usecs (1e-8 secs)
-#define PWM_DUTY_PIN_42 100000 // 1000 msecs in hundredth of usecs (1e-8 secs)
+#define PWM_DUTY_PIN_42 100000 // 1 msec in hundredth of usecs (1e-8 secs)
 
-#define CAPTURE_TIME_WINDOW 40000 // usecs
-#define DUTY_KEEPING_TIME 1000 // msecs
+#define CAPTURE_TIME_WINDOW 4000000 // usecs
+#define DUTY_KEEPING_TIME 10000 // msecs 
 
 // defining pwm object using pin 35, pin PC3 mapped to pin 35 on the DUE
 // this object uses PWM channel 0
@@ -118,6 +118,7 @@ void loop() {
   uint32_t status,duty,period;
 
   Serial.println("===============================================================");
+  Serial.print("maximum period: "); Serial.print(pwm_core::max_period(),12); Serial.println("s."); 
   status=capture_pin2.get_duty_and_period(duty,period);
   Serial.print("[PIN 35 -> PIN 2] duty: "); 
   Serial.print(
