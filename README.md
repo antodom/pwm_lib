@@ -1,4 +1,4 @@
-## pwm_lib v1.2
+## pwm_lib v1.3
 
 This is pwm_lib library for the Arduino DUE electronic prototyping platform. 
 
@@ -12,7 +12,7 @@ The pwm_lib library is an open source project which is openly available under th
 
 This is a C++ library to abstract the use of the eight hardware PWM channels available on Arduino DUE's Atmel ATSAM3X8E microcontroller. Each channel can be used to generate a completely independent PWM signal directly on hardware. The motivation to develop this library was two fold. First, the current limitation of the Arduino standard library where it is not possible to change the PWM output period of the PWM signals generated using function *analogWrite()*. And second, to have a library for servos directly supported by the hardware, therefore, "lighter", in terms of code generated and computational load, than the Servo library available in the Arduino standard library.
 
-The library provides two kind of objects associated with each PWM channel: pwm and servo objects. As those objects abstract the PWM channels available on the micro controller, using pwm_lib you can use, at most, eight independent pwm_lib objects in your application, each one with its own PWM characteristics (PWM signal period and pulse duration). In its current version, the maximum period for PWM signals you can get using pwm_lib is a period of 3.195660190476 seconds (minimum frequency of 0.31292438507081943 Hz).
+The library provides two kind of objects associated with each PWM channel: pwm and servo objects. As those objects abstract the PWM channels available on the micro controller, using pwm_lib you can use, at most, eight independent pwm_lib objects in your application, each one with its own PWM characteristics (PWM signal period and pulse duration). In its current version, the maximum period for PWM signals you can get using pwm_lib is a period of 102.261126095238 seconds (minimum frequency of 0.009778887033462533 Hz).
 
 ### 2. PWM objects
 
@@ -203,7 +203,13 @@ For compiling in command line using CMake, just proceed in the following manner:
   * `make upload_servo_test`, 
   * `make upload_wrapper_servo_test` 
 
-### 8. Library users
+### 8. Version changes
+
+#### 7.1 v1.3
+
+With respect to version v1.2 the library has been modifyed for admitting longer PWM periods, now the maximum acceptable PWM period is 102.261126095238 seconds.
+
+### 9. Library users
 
 In this section we would like to enumerate users using the library in their own projects and developments. So please, if you are using the library, drop us an email indicating in what project or development you are using it.
 
@@ -211,6 +217,6 @@ The list of users/projects goes now:
 
 1. **Project:** Autonomous sailboat A-Tirma (<http://velerorobot.blogspot.com.es>). **User**: División de Robótica y Oceanografía Computacional (<http://www.roc.siani.es>). **Description**: The library was a specific development for this project. The sailboat onboard system is based on an Arduino DUE. 
 
-### 9. Feedback & Suggestions
+### 10. Feedback & Suggestions
 
 Please be free to send me any comment, doubt of use, or suggestion in relation to pwm_lib.

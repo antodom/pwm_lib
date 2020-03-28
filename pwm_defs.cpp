@@ -41,8 +41,24 @@ namespace arduino_due
 
     namespace pwm_core
     {
+      const uint32_t two_power_values[max_clocks+1]=
+      {
+        0, // no clock divisor
+        1, // clock divisor 2
+        2, // clock divisor 4
+        3, // clock divisor 8
+        4, // clock divisor 16
+        5, // clock divisor 32
+        6, // clock divisor 64 
+        7, // clock divisor 128 
+        8, // clock divisor 256 
+        9, // clock divisor 512 
+        10, // clock divisor 1024 
+        11, // clock divisor 2048 
+        17 // clock divisor 131072 
+      };
 
-      const double max_periods[max_two_power+1]=
+      const double max_periods[max_clocks+1]=
       {
         max_period(0), // no clock divisor
         max_period(1), // clock divisor 2
@@ -56,10 +72,10 @@ namespace arduino_due
         max_period(9), // clock divisor 512 
         max_period(10), // clock divisor 1024 
         max_period(11), // clock divisor 2048 
-        max_period(12) // clock divisor 4096 
+        max_period(12) // clock divisor 131072 
       };
  
-      const uint32_t clock_masks[max_two_power+1]=
+      const uint32_t clock_masks[max_clocks+1]=
       {
         PWM_CMR_CPRE_MCK,
         PWM_CMR_CPRE_MCK_DIV_2,
@@ -76,7 +92,7 @@ namespace arduino_due
         PWM_CMR_CPRE_CLKB
       };
 
-      const double tick_times[max_two_power+1]=
+      const double tick_times[max_clocks+1]=
       {
         tick_time(0), // no clock divisor
         tick_time(1), // clock divisor 2
@@ -89,8 +105,8 @@ namespace arduino_due
         tick_time(8), // clock divisor 256 
         tick_time(9), // clock divisor 512 
         tick_time(10), // clock divisor 1024 
-        tick_time(11), // clock divisor 1024 
-        tick_time(12) // clock divisor 1024 
+        tick_time(11), // clock divisor 2048 
+        tick_time(12) // clock divisor 131072 
       };
  
       bool find_clock(
@@ -100,12 +116,12 @@ namespace arduino_due
       {
         for( 
           clock=0; 
-          (clock<=max_two_power) && 
+          (clock<=max_clocks) && 
           (static_cast<double>(period)/100000000>max_periods[clock]);
           clock++
         ) { /* nothing */ }
 
-        if(clock>max_two_power) return false;
+        if(clock>max_clocks) return false;
         return true;
       }
 

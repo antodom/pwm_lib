@@ -155,31 +155,33 @@ namespace arduino_due
     namespace pwm_core
     {
   
-      constexpr const uint32_t max_two_power=12;
-      extern const double max_periods[max_two_power+1];
-      extern const double tick_times[max_two_power+1];
-      extern const uint32_t clock_masks[max_two_power+1];
+      constexpr uint32_t max_clocks=12;
+      extern const uint32_t two_power_values[max_clocks+1];
+      extern const double max_periods[max_clocks+1];
+      extern const double tick_times[max_clocks+1];
+      extern const uint32_t clock_masks[max_clocks+1];
   
-      constexpr inline double tick_time(uint32_t two_power) noexcept
+      constexpr inline double tick_time(uint32_t clock) noexcept
       {
         return static_cast<double>(
-          ( (0<=two_power) && (two_power<=max_two_power) )? 
-            static_cast<uint32_t>(1<<two_power)/static_cast<double>(VARIANT_MCK):
+          ( (0<=clock) && (clock<=max_clocks) )? 
+            static_cast<uint32_t>(1<<two_power_values[clock])/static_cast<double>(VARIANT_MCK):
             -1
         );
       }
 
-      constexpr inline double max_period(uint32_t two_power) noexcept
+      inline double max_period(uint32_t clock) noexcept
       {
         return static_cast<double>(
-          ( (0<=two_power) && (two_power<=max_two_power) )? 
-            static_cast<uint64_t>(1<<(16+two_power))/static_cast<double>(VARIANT_MCK):
-            -1
+          ((0<=clock) && (clock<=max_clocks))? 
+            (static_cast<uint64_t>(1)<<(16+two_power_values[clock]))
+            /static_cast<double>(VARIANT_MCK)
+            :-1
         );
       }
 
-      constexpr inline static double max_period() noexcept
-      { return max_period(max_two_power); }
+      inline static double max_period() noexcept
+      { return max_period(max_clocks); }
 
       extern bool find_clock(
         uint32_t period, // hundredths of usecs (1e-8 secs)

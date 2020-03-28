@@ -37,14 +37,14 @@
 
 using namespace arduino_due::pwm_lib;
 
-#define PWM_PERIOD_PIN_35 300000000 // hundredth of usecs (1e-8 secs)
+#define PWM_PERIOD_PIN_35 800000000 // hundredth of usecs (1e-8 secs)
 #define PWM_DUTY_PIN_35 50000000 // 100 msecs in hundredth of usecs (1e-8 secs)
 
-#define PWM_PERIOD_PIN_42 2000000 // 20 msecs in hundredth of usecs (1e-8 secs)
-#define PWM_DUTY_PIN_42 100000 // 1 msec in hundredth of usecs (1e-8 secs)
+#define PWM_PERIOD_PIN_42 10000 // 100 usecs in hundredth of usecs (1e-8 secs)
+#define PWM_DUTY_PIN_42 1000 // 10 usec in hundredth of usecs (1e-8 secs)
 
-#define CAPTURE_TIME_WINDOW 4000000 // usecs
-#define DUTY_KEEPING_TIME 10000 // msecs 
+#define CAPTURE_TIME_WINDOW 15000000 // usecs
+#define DUTY_KEEPING_TIME 30000 // msecs 
 
 // defining pwm object using pin 35, pin PC3 mapped to pin 35 on the DUE
 // this object uses PWM channel 0
@@ -87,6 +87,16 @@ void setup() {
   // starting PWM signals
   pwm_pin35.start(PWM_PERIOD_PIN_35,PWM_DUTY_PIN_35);
   pwm_pin42.start(PWM_PERIOD_PIN_42,PWM_DUTY_PIN_42);
+
+  Serial.println("================================================");
+  Serial.println("============= pwm_lib - basic_test =============");
+  Serial.println("================================================");
+  for(size_t i=0; i<=pwm_core::max_clocks;i++) 
+  {
+    Serial.print("maximum period - clock "); Serial.print(i); Serial.print(": ");
+    Serial.print(pwm_core::max_period(i),12); Serial.println(" s."); 
+  }
+  Serial.println("================================================");
 }
 
 // FIX: function template change_duty is defined in
@@ -117,8 +127,7 @@ void loop() {
 
   uint32_t status,duty,period;
 
-  Serial.println("===============================================================");
-  Serial.print("maximum period: "); Serial.print(pwm_core::max_period(),12); Serial.println("s."); 
+  Serial.println("================================================");
   status=capture_pin2.get_duty_and_period(duty,period);
   Serial.print("[PIN 35 -> PIN 2] duty: "); 
   Serial.print(
@@ -140,7 +149,7 @@ void loop() {
   Serial.print(" usecs. period: ");
   Serial.print(period/capture_pinA7.ticks_per_usec());
   Serial.println(" usecs.");
-  Serial.println("===============================================================");
+  Serial.println("================================================");
 
   // changing duty in pwm output pin 35 
   change_duty(pwm_pin35,PWM_DUTY_PIN_35,PWM_PERIOD_PIN_35);

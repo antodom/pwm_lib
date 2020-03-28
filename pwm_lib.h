@@ -192,9 +192,19 @@ namespace arduino_due
 
      // setting PWM clocks
      PWM->PWM_CLK=
-       2 // clock A's DIVA value
+       (
+         1<<(
+           pwm_core::two_power_values[11]-pwm_core::two_power_values[10]
+         )
+       ) // clock A's DIVA value
        | (PWM_CMR_CPRE_MCK_DIV_1024<<8) //clock A's prescaler
-       | (4<<16) // clock B's DIVB value
+       | (
+           (
+             1<<(
+               pwm_core::two_power_values[12]-pwm_core::two_power_values[10]
+             )
+           )<<16
+         ) // clock B's DIVB value
        | (PWM_CMR_CPRE_MCK_DIV_1024<<24) // clock B's prescaler
      ;
 
