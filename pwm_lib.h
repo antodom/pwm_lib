@@ -210,7 +210,7 @@ namespace arduino_due
 
      // configuring the pwm pin
      PIO_Configure(
-       pin_info::pio_p,
+       pin_info::pio_p(),
        pin_info::type,
        pin_info::pin,
        pin_info::conf

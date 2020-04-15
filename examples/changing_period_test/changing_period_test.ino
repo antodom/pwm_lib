@@ -141,7 +141,7 @@ void loop() {
   Serial.println(" usecs.");
   Serial.println("===============================================================");
 
-  if(!pwm_pin35.set_period_and_duty(periods[period],(periods[period]>>1)))
+  if(!pwm_pin35.set_period_and_duty(periods[period],(periods[period]>>1),false))
   {
     Serial.print("[ERROR] set_period_and_duty(");
     Serial.print(periods[period]);
