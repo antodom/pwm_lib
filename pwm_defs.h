@@ -177,7 +177,7 @@ namespace arduino_due
       constexpr inline double tick_time(uint32_t clock) noexcept
       {
         return static_cast<double>(
-          ( (0<=clock) && (clock<=max_clocks) )? 
+          ( (0<clock) && (clock<=max_clocks) )? 
             static_cast<uint32_t>(1<<two_power_values[clock])/static_cast<double>(VARIANT_MCK):
             -1
         );
@@ -186,7 +186,7 @@ namespace arduino_due
       inline double max_period(uint32_t clock) noexcept
       {
         return static_cast<double>(
-          ((0<=clock) && (clock<=max_clocks))? 
+          ((0<clock) && (clock<=max_clocks))? 
             (static_cast<uint64_t>(1)<<(16+two_power_values[clock]))
             /static_cast<double>(VARIANT_MCK)
             :-1
