@@ -90,19 +90,6 @@ namespace arduino_due
 
     template<pwm_pin PIN> struct pin_traits {};
 
-    //#define pin_traits_specialization(the_pwm_pin,pio,pio_pin,pio_id,pio_type,pio_conf,pwm_channel,pwm_inverted) \
-    //template<> struct pin_traits< \
-    //  the_pwm_pin \
-    //> \
-    //{ \
-    //  static constexpr Pio* pio_p = pio; \
-    //  static constexpr const uint32_t pin = pio_pin; \
-    //  static constexpr const uint32_t id = pio_id; \
-    //  static constexpr const EPioType type= pio_type; \
-    //  static constexpr const uint32_t conf = pio_conf; \
-    //  static constexpr const EPWMChannel channel = pwm_channel; \
-    //  static constexpr const bool inverted = pwm_inverted; \
-    //};
     #define pin_traits_specialization(the_pwm_pin,pio,pio_pin,pio_id,pio_type,pio_conf,pwm_channel,pwm_inverted) \
     template<> struct pin_traits< \
       the_pwm_pin \
