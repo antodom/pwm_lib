@@ -2,7 +2,7 @@
 
 This is pwm_lib library for the Arduino DUE electronic prototyping platform. 
 
-Copyright (C) 2015,2016 Antonio C. Domínguez Brito (<adominguez@iusiani.ulpgc.es>). División de Robótica y Oceanografía Computacional (<http://www.roc.siani.es>) and Departamento de Informática y Sistemas (<http://www.dis.ulpgc.es>). Universidad de Las Palmas de Gran  Canaria (ULPGC) (<http://www.ulpgc.es>).
+Copyright (C) 2015,2020 Antonio C. Domínguez Brito (<antonio.dominguez@ulpgc.es>). División de Robótica y Oceanografía Computacional (<http://www.roc.siani.es>) and Departamento de Informática y Sistemas (<http://www.dis.ulpgc.es>). Universidad de Las Palmas de Gran  Canaria (ULPGC) (<http://www.ulpgc.es>).
   
 ### 0. License 
 

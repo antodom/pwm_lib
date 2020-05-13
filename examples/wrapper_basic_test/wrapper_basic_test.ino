@@ -1,8 +1,8 @@
 /**
  ** pwm_lib library
- ** Copyright (C) 2015, 2016
+ ** Copyright (C) 2015,2020
  **
- **   Antonio C. Domínguez Brito <adominguez@iusiani.ulpgc.es>
+ **   Antonio C. Domínguez Brito <antonio.dominguez@ulpgc.es>
  **     División de Robótica y Oceanografía Computacional <www.roc.siani.es>
  **     and Departamento de Informática y Sistemas <www.dis.ulpgc.es>
  **     Universidad de Las Palmas de Gran  Canaria (ULPGC) <www.ulpgc.es>
@@ -29,7 +29,7 @@
  * and duties (pulse durations). It is identical to basic_test.ino but
  * using wrappers objects.
  * Date: December 3rd, 2016
- * Author: Antonio C. Dominguez-Brito <adominguez@iusiani.ulpgc.es>
+ * Author: Antonio C. Dominguez-Brito <antonio.dominguez@ulpgc.es>
  * ROC-SIANI - Universidad de Las Palmas de Gran Canaria - Spain
  */
 
