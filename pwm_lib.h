@@ -58,7 +58,8 @@ namespace arduino_due
 
        bool start(
         uint32_t period, // hundredths of usecs (1e-8 secs)
-        uint32_t duty // // hundredths of usecs (1e-8 secs)
+        uint32_t duty, // // hundredths of usecs (1e-8 secs)
+        bool inverted = false
        )
        {
          uint32_t clock;
@@ -68,7 +69,9 @@ namespace arduino_due
 	         || (duty>period)
 	       ) return false;
 
-	       _start_(period,duty,clock);
+         _inverted_=inverted;
+
+	       _start_(period,duty,clock,_inverted_);
 
 	       return true;
        }
@@ -140,7 +143,7 @@ namespace arduino_due
 	           set_duty(duty); 
 	         }
 	         else
-	         { _stop_(); _start_(period,duty,clock); }
+	         { _stop_(); _start_(period,duty,clock,_inverted_); }
          }
 
 	       return true;
@@ -156,11 +159,13 @@ namespace arduino_due
        uint32_t _period_; // hundredths of usecs (1e-8 secs.)
        uint32_t _duty_; // hundredths of usecs (1e-8 secs.)
        bool _started_;
+       bool _inverted_;
 
        void _start_(
 	       uint32_t period, // hundredths of usecs (1e-8 secs.)
 	       uint32_t duty, // hundredths of usecs (1e-8 secs.)
-	       uint32_t clock
+	       uint32_t clock,
+         bool inverted 
        );
        
        void _stop_()
@@ -183,7 +188,8 @@ namespace arduino_due
    void pwm<PIN>::_start_(
      uint32_t period, // hundredths of usecs (1e-8 secs.)
      uint32_t duty, // hundredths of usecs (1e-8 secs.)
-     uint32_t clock
+     uint32_t clock,
+     bool inverted 
    )
    {
      _clock_=clock;
@@ -221,7 +227,11 @@ namespace arduino_due
        pin_info::channel,
        pwm_core::clock_masks[_clock_],
        0, // left aligned
-       (pin_info::inverted)? 0: (1<<9), // polarity
+       ( // polarity
+         (_inverted_)?
+           ((pin_info::inverted)? (1<<9): 0):
+           ((pin_info::inverted)? 0: (1<<9))
+       ),
        0, // interrupt on counter event at end's period
        0, // dead-time disabled
        0, // non inverted dead-time high output
